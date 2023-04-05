@@ -161,7 +161,11 @@ def position_birth_search(position, age, cur, conn):
 #     the passed year. 
 
 def make_winners_table(data, cur, conn):
-    pass
+    winners = []
+    
+
+    
+
 
 def make_seasons_table(data, cur, conn):
     pass
