@@ -3,7 +3,6 @@
 # Your student id: 05101958
 # Your email: dzgodny@umich.edu
 # List who you have worked with on this project: Jade Stoler and Lily Wachtel 
-
 import unittest
 import sqlite3
 import json
@@ -80,6 +79,7 @@ def nationality_search(countries, cur, conn):
         cur.execute("SELECT name, position_id, nationality FROM Players WHERE nationality = ?", (country,))
         player_list += cur.fetchall()
     print(player_list)
+    conn.commit()
     return player_list
 
 ## [TASK 3]: 10 points
@@ -101,6 +101,7 @@ def nationality_search(countries, cur, conn):
 def birthyear_nationality_search(age, country, cur, conn):
     year = 2023-age
     cur.execute("SELECT name, nationality, birthyear FROM Players WHERE nationality = ? AND birthyear < ?", (country, year))
+    conn.commit()
     return cur.fetchall()
 
 ## [TASK 4]: 15 points
@@ -123,6 +124,7 @@ def birthyear_nationality_search(age, country, cur, conn):
 def position_birth_search(position, age, cur, conn):
        year = 2023-age
        cur.execute("SELECT Players.name, Positions.position, Players.birthyear FROM Players JOIN Positions ON Players.position_id = Positions.id WHERE Positions.position = ? AND Players.birthyear > ?", (position, year))
+       conn.commit()
        return cur.fetchall()
 
 # [EXTRA CREDIT]
@@ -161,13 +163,23 @@ def position_birth_search(position, age, cur, conn):
 #     the passed year. 
 
 def make_winners_table(data, cur, conn):
-    winners = []
-    
-
-    
-
+    cur.execute("CREATE TABLE IF NOT EXISTS Winners (id INTEGER PRIMARY KEY, name TEXT UNIQUE)")
+    winners = {}
+    for season in data["seasons"]: 
+        if season["winner"]: 
+            winner_id = season["winner"]["id"]
+            winner_name = season["winner"]["name"]
+            if winner_id not in winners:
+                winners[winner_id] = winner_name
+                cur.execute("INSERT OR IGNORE INTO Winners (id, name) VALUES (?,?)", (int(winner_id), winner_name))
+    conn.commit()
 
 def make_seasons_table(data, cur, conn):
+    cur.execute("CREATE TABLE IF NOT EXISTS Seasons (id, INTEGER PRIAMRY KEY, winner_id TEXT UNIQUE, end_year, INTEGER")
+    seasons = []
+    for season in data["seasons"]:
+        if season["seasons"]:
+            id = season[""]
     pass
 
 def winners_since_search(year, cur, conn):
@@ -229,8 +241,8 @@ class TestAllMethods(unittest.TestCase):
     def test_make_winners_table(self):
         self.cur2.execute('SELECT * from Winners')
         winners_list = self.cur2.fetchall()
-
-        pass
+        self.assertEqual(len(winners_list), 7)
+        self.assertEqual(len(winners_list[0]), 2)
 
     def test_make_seasons_table(self):
         self.cur2.execute('SELECT * from Seasons')
