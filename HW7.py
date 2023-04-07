@@ -175,11 +175,6 @@ def make_winners_table(data, cur, conn):
     conn.commit()
 
 def make_seasons_table(data, cur, conn):
-    cur.execute("CREATE TABLE IF NOT EXISTS Seasons (id, INTEGER PRIAMRY KEY, winner_id TEXT UNIQUE, end_year, INTEGER")
-    seasons = []
-    for season in data["seasons"]:
-        if season["seasons"]:
-            id = season[""]
     pass
 
 def winners_since_search(year, cur, conn):
